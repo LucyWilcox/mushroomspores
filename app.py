@@ -1,9 +1,13 @@
 import os
 from flask import Flask, jsonify, request
+from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config.from_pyfile('config.py')
+db = SQLAlchemy(app)
 
 currid = [{ 'currid': 1 }]
+
 
 @app.route('/')
 def hello():
