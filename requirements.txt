@@ -7,7 +7,7 @@ Werkzeug==0.9.6
 aniso8601==0.82
 gunicorn==19.0.0
 itsdangerous==0.24
-pymongo==2.7.1
 pytz==2014.4
+psycopg2==2.6.2
 six==1.7.2
 Flask-SQLAlchemy==2.1
