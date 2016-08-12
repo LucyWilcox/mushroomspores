@@ -6,7 +6,7 @@ import psycopg2
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
-database_URI = so.environ['SQLALCHEMY_DATABASE_URI']
+database_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 
 @app.route('/')
 def hello():
