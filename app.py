@@ -5,7 +5,7 @@ import psycopg2
 # import config as config
 
 app = Flask(__name__)
-app.config.from_pyfile('config.py')
+app.config.from_object(os.environ['DATABASE_URL'])
 
 @app.route('/')
 def hello():
