@@ -6,7 +6,6 @@ import psycopg2
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
-database_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 
 @app.route('/')
 def hello():
@@ -14,6 +13,7 @@ def hello():
 
 @app.route('/todo/api/v1.0/currid', methods=['GET'])
 def get_id():
+	database_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
 	curr.execute("SELECT * FROM CurrentId;")
@@ -26,6 +26,7 @@ def get_id():
 
 @app.route('/todo/api/v1.0/currid', methods=['POST'])
 def post_id():
+	database_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'newid' in request.json:
