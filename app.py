@@ -2,7 +2,7 @@ import os
 from flask import Flask, jsonify, request
 from flask.ext.sqlalchemy import SQLAlchemy
 import psycopg2
-import config as config
+# import config as config
 
 app = Flask(__name__)
 # app.config(os.environ['DATABASE_URL'])
