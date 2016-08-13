@@ -2,10 +2,12 @@ import os
 from flask import Flask, jsonify, request
 from flask.ext.sqlalchemy import SQLAlchemy
 import psycopg2
-# import config as config
+import config as config
 
 app = Flask(__name__)
-app.config.from_object(os.environ['DATABASE_URL'])
+# app.config(os.environ['DATABASE_URL'])
+# app.config.from_pyfile('config.py')
+
 
 @app.route('/')
 def hello():
@@ -13,6 +15,7 @@ def hello():
 
 @app.route('/todo/api/v1.0/currid', methods=['GET'])
 def get_id():
+	# database_URI = config.SQLALCHEMY_DATABASE_URI
 	database_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
@@ -26,6 +29,7 @@ def get_id():
 
 @app.route('/todo/api/v1.0/currid', methods=['POST'])
 def post_id():
+	# database_URI = config.SQLALCHEMY_DATABASE_URI
 	database_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
