@@ -15,8 +15,8 @@ def hello():
 
 @app.route('/todo/api/v1.0/currid', methods=['GET'])
 def get_id():
-	# database_URI = config.SQLALCHEMY_DATABASE_URI
-	database_URI = os.environ['SQLALCHEMY_DATABASE_URI']
+	# database_URI = config.DATABASE_URI
+	database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
 	curr.execute("SELECT * FROM CurrentId;")
@@ -29,8 +29,8 @@ def get_id():
 
 @app.route('/todo/api/v1.0/currid', methods=['POST'])
 def post_id():
-	# database_URI = config.SQLALCHEMY_DATABASE_URI
-	database_URI = os.environ['SQLALCHEMY_DATABASE_URI']
+	# database_URI = config.DATABASE_URI
+	database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'newid' in request.json:
