@@ -1,6 +1,5 @@
 import os
 from flask import Flask, jsonify, request
-from flask.ext.sqlalchemy import SQLAlchemy
 import psycopg2
 import time
 import random
