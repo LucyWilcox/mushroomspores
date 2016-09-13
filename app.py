@@ -1,10 +1,10 @@
 import os
 from flask import Flask, jsonify, request
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 import time
 import random
-# import config as config
+import config as config
 
 app = Flask(__name__)
 
@@ -14,8 +14,8 @@ def hello():
 
 @app.route('/todo/api/v1.0/currid', methods=['GET'])
 def get_id_v1():
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
 	curr.execute("SELECT * FROM CurrentId;")
@@ -52,8 +52,8 @@ def get_id_v2(numimages):
 
 @app.route('/todo/api/v1.0/currid', methods=['POST'])
 def post_id():
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'newid' in request.json:
@@ -72,7 +72,29 @@ def post_id():
 	conn.close()
 	return jsonify({'currid': curr_id}), 201
 
+@app.route('/todo/api/v1.0/addimages', methods=['POST'])
+def post_url():
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
+	if not request.json:
+		print "could not find request.json"
+	if not 'allurls' in request.json:
+		print "no newid in request.json"
+	print request.json
+	conn = psycopg2.connect(database_URI)
+	curr = conn.cursor()
+	all_urls = request.json['allurls']
+	all_urls = [x.encode('UTF8') for x in all_urls]
+	all_urls = "ARRAY" + str(all_urls)
+	sql = "UPDATE CurrentId SET all_urls = %s WHERE id = 1" %(all_urls)
+	print sql
+	curr.execute(sql)
+	conn.commit()
+	curr.close()
+	conn.close()
+	return jsonify({'allurls': all_urls}), 201
+
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 4000))
     app.run(host='0.0.0.0', port=port)
