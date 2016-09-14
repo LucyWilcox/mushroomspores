@@ -10,12 +10,12 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return 'Hello World!'
+    return 'Hello World! The app is up!'
 
 @app.route('/todo/api/v1.0/currid', methods=['GET'])
 def get_id_v1():
-	database_URI = config.DATABASE_URI
-	# database_URI = os.environ['DATABASE_URI']
+	# database_URI = config.DATABASE_URI
+	database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
 	curr.execute("SELECT * FROM CurrentId;")
@@ -52,8 +52,8 @@ def get_id_v2(numimages):
 
 @app.route('/todo/api/v1.0/currid', methods=['POST'])
 def post_id():
-	database_URI = config.DATABASE_URI
-	# database_URI = os.environ['DATABASE_URI']
+	# database_URI = config.DATABASE_URI
+	database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'newid' in request.json:
@@ -73,8 +73,8 @@ def post_id():
 
 @app.route('/todo/api/v3.0/allurls', methods=['GET'])
 def get_urls():
-	database_URI = config.DATABASE_URI
-	# database_URI = os.environ['DATABASE_URI']
+	# database_URI = config.DATABASE_URI
+	database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
 	curr.execute("SELECT * FROM CurrentId;")
@@ -87,8 +87,8 @@ def get_urls():
 
 @app.route('/todo/api/v3.0/allurls', methods=['POST'])
 def post_urls():
-	database_URI = config.DATABASE_URI
-	# database_URI = os.environ['DATABASE_URI']
+	# database_URI = config.DATABASE_URI
+	database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'allurls' in request.json:
@@ -109,8 +109,8 @@ def post_urls():
 
 @app.route('/todo/api/v3.0/currurl', methods=['GET'])
 def get_url():
-	database_URI = config.DATABASE_URI
-	# database_URI = os.environ['DATABASE_URI']
+	# database_URI = config.DATABASE_URI
+	database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
 	curr.execute("SELECT * FROM CurrentId;")
@@ -123,8 +123,8 @@ def get_url():
 
 @app.route('/todo/api/v3.0/currurl', methods=['POST'])
 def post_url():
-	database_URI = config.DATABASE_URI
-	# database_URI = os.environ['DATABASE_URI']
+	# database_URI = config.DATABASE_URI
+	database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'currurl' in request.json:
