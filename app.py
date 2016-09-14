@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 import time
 import random
-import config as config
+# import config as config
 
 app = Flask(__name__)
 
