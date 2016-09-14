@@ -58,7 +58,6 @@ def post_id():
 		print "could not find request.json"
 	if not 'newid' in request.json:
 		print "no newid in request.json"
-	print "okay this should work now"
 	print request.json
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
@@ -72,8 +71,22 @@ def post_id():
 	conn.close()
 	return jsonify({'currid': curr_id}), 201
 
-@app.route('/todo/api/v1.0/addimages', methods=['POST'])
-def post_url():
+@app.route('/todo/api/v1.0/allimages', methods=['GET'])
+def get_urls():
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
+	conn = psycopg2.connect(database_URI)
+	curr = conn.cursor()
+	curr.execute("SELECT * FROM CurrentId;")
+	all_urls = curr.fetchone()[5]
+	print all_urls
+	conn.commit()
+	curr.close()
+	conn.close()
+	return jsonify({'allurls': all_urls}), 200
+
+@app.route('/todo/api/v1.0/allimages', methods=['POST'])
+def post_urls():
 	database_URI = config.DATABASE_URI
 	# database_URI = os.environ['DATABASE_URI']
 	if not request.json:
