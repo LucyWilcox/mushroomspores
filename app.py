@@ -71,7 +71,7 @@ def post_id():
 	conn.close()
 	return jsonify({'currid': curr_id}), 201
 
-@app.route('/todo/api/v1.0/allimages', methods=['GET'])
+@app.route('/todo/api/v3.0/allurls', methods=['GET'])
 def get_urls():
 	database_URI = config.DATABASE_URI
 	# database_URI = os.environ['DATABASE_URI']
@@ -85,14 +85,14 @@ def get_urls():
 	conn.close()
 	return jsonify({'allurls': all_urls}), 200
 
-@app.route('/todo/api/v1.0/allimages', methods=['POST'])
+@app.route('/todo/api/v3.0/allurls', methods=['POST'])
 def post_urls():
 	database_URI = config.DATABASE_URI
 	# database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'allurls' in request.json:
-		print "no newid in request.json"
+		print "no allurls in request.json"
 	print request.json
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
@@ -106,6 +106,41 @@ def post_urls():
 	curr.close()
 	conn.close()
 	return jsonify({'allurls': all_urls}), 201
+
+@app.route('/todo/api/v3.0/currurl', methods=['GET'])
+def get_url():
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
+	conn = psycopg2.connect(database_URI)
+	curr = conn.cursor()
+	curr.execute("SELECT * FROM CurrentId;")
+	curr_url = curr.fetchone()[3]
+	print curr_url
+	conn.commit()
+	curr.close()
+	conn.close()
+	return jsonify({'curr_url': curr_url}), 200
+
+@app.route('/todo/api/v3.0/currurl', methods=['POST'])
+def post_url():
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
+	if not request.json:
+		print "could not find request.json"
+	if not 'currurl' in request.json:
+		print "no currurl in request.json"
+	print request.json
+	conn = psycopg2.connect(database_URI)
+	curr = conn.cursor()
+	curr_url = request.json['currurl']
+	curr_url = "'" + curr_url + "'"
+	sql = "UPDATE CurrentId SET curr_url = %s WHERE id = 1" %(curr_url)
+	print sql
+	curr.execute(sql)
+	conn.commit()
+	curr.close()
+	conn.close()
+	return jsonify({'currurl': curr_url}), 201
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
