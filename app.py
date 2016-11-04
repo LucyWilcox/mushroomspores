@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 import time
 import random
-# import config as config
+import config as config
 
 app = Flask(__name__)
 
@@ -14,8 +14,8 @@ def hello():
 
 @app.route('/todo/api/v1.0/currid', methods=['GET'])
 def get_id_v1():
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
 	curr.execute("SELECT * FROM CurrentId;")
@@ -28,8 +28,8 @@ def get_id_v1():
 
 @app.route('/todo/api/v2.0/currid/images/<numimages>', methods=['GET'])
 def get_id_v2(numimages):
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
 	current_time = time.time() * 1000
@@ -52,8 +52,8 @@ def get_id_v2(numimages):
 
 @app.route('/todo/api/v1.0/currid', methods=['POST'])
 def post_id():
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'newid' in request.json:
@@ -73,13 +73,14 @@ def post_id():
 
 @app.route('/todo/api/v3.0/allurls', methods=['GET'])
 def get_urls():
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
-	curr.execute("SELECT * FROM CurrentId;")
-	all_urls = curr.fetchone()[5]
-	print all_urls
+	curr.execute("SELECT image FROM images;")
+	all_urls = []
+	for row in curr:
+		all_urls.append(row[0])
 	conn.commit()
 	curr.close()
 	conn.close()
@@ -87,8 +88,8 @@ def get_urls():
 
 @app.route('/todo/api/v3.0/allurls', methods=['POST'])
 def post_urls():
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'allurls' in request.json:
@@ -96,25 +97,29 @@ def post_urls():
 	print request.json
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
-	all_urls = request.json['allurls']
-	all_urls = [x.encode('UTF8') for x in all_urls]
-	all_urls = "ARRAY" + str(all_urls)
-	sql = "UPDATE CurrentId SET all_urls = %s WHERE id = 1" %(all_urls)
-	print sql
+	sql = "TRUNCATE Images;"
 	curr.execute(sql)
 	conn.commit()
+	all_urls = request.json['allurls']
+	all_urls = all_urls.split() 
+	# please seperate url with a space
+	for i in all_urls:
+		sql = "INSERT INTO Images VALUES (%i, '%s');" %(1, i)
+		print sql
+		curr.execute(sql)
+		conn.commit()
 	curr.close()
 	conn.close()
 	return jsonify({'allurls': all_urls}), 201
 
 @app.route('/todo/api/v3.0/currurl', methods=['GET'])
 def get_url():
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
-	curr.execute("SELECT * FROM CurrentId;")
-	curr_url = curr.fetchone()[3]
+	curr.execute("SELECT curr_url FROM CurrentId;")
+	curr_url = curr.fetchone()
 	print curr_url
 	conn.commit()
 	curr.close()
@@ -123,8 +128,8 @@ def get_url():
 
 @app.route('/todo/api/v3.0/currurl', methods=['POST'])
 def post_url():
-	# database_URI = config.DATABASE_URI
-	database_URI = os.environ['DATABASE_URI']
+	database_URI = config.DATABASE_URI
+	# database_URI = os.environ['DATABASE_URI']
 	if not request.json:
 		print "could not find request.json"
 	if not 'currurl' in request.json:
