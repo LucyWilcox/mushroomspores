@@ -134,8 +134,8 @@ def post_url():
 		print "could not find request.json"
 	if not 'currurl' in request.json:
 		print "no currurl in request.json"
-	if not 'nexturl' in request.json:
-		print "no nexturl in request.json"
+	# if not 'nexturl' in request.json:
+	# 	print "no nexturl in request.json"
 	print request.json
 	conn = psycopg2.connect(database_URI)
 	curr = conn.cursor()
@@ -143,11 +143,11 @@ def post_url():
 	curr_url = "'" + curr_url + "'"
 	sql = "UPDATE CurrentId SET curr_url = %s WHERE id = 1" %(curr_url)
 	curr.execute(sql)
-	next_url = request.json['nexturl']
-	next_url = "'" + next_url + "'"
-	sql = "UPDATE CurrentId SET next_url = %s WHERE id = 1" %(next_url)
-	print sql
-	curr.execute(sql)
+	# next_url = request.json['nexturl']
+	# next_url = "'" + next_url + "'"
+	# sql = "UPDATE CurrentId SET next_url = %s WHERE id = 1" %(next_url)
+	# print sql
+	# curr.execute(sql)
 	conn.commit()
 	curr.close()
 	conn.close()
